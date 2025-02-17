@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 import Fishes from "./components/Fishes";
 import Tank from "./components/Tank";
 
@@ -33,7 +34,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1 className="text-center">Akvarium</h1>
+      <h1 className="display-4 text-center">Akvarium</h1>
       <div className="row">
         <div className="col-md-6 col-12 p-5">
           <div className="d-flex justify-content-center mb-3">
@@ -41,7 +42,7 @@ function App() {
               className="btn btn-outline-info"
               onClick={() => setIsFishesVisible(!isFishesVisible)}
             >
-              Zobraz/skryj Rybičky
+              {isFishesVisible ? "Skryj" : "Zobraz"} Rybičky
             </button>
           </div>
           <div className={isFishesVisible ? "d-block" : "d-none"}>
@@ -58,7 +59,7 @@ function App() {
               className="btn btn-outline-info"
               onClick={() => setIsTankVisible(!isTankVisible)}
             >
-              Zobraz/skryj Nádrž
+              {isTankVisible ? "Skryj" : "Zobraz"} Nádrž
             </button>
           </div>
           <div className={isTankVisible ? "d-block" : "d-none"}>
