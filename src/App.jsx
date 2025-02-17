@@ -12,13 +12,7 @@ function App() {
   const [isFishesVisible, setIsFishesVisible] = useState(false);
   const [isTankVisible, setIsTankVisible] = useState(false);
 
-  const [fishState, setFishState] = useState({
-    x: 100,
-    y: 100,
-    isFlipped: false,
-    dx: 2, // směr x
-    dy: 1, // směr y
-  });
+  const [fishStates, setFishStates] = useState([]);
 
   const handleAddFish = (fish) => {
     // alert(fish.name + " " + fish.isLarge);
@@ -40,77 +34,110 @@ function App() {
     }
   };
 
+  // Když se změní počet rybiček, zresetuj stavy
   useEffect(() => {
-    // PLYNULÝ POHYB každých 50 ms
-    const moveInterval = setInterval(() => {
-      setFishState((prev) => {
-        let newX = prev.x + prev.dx;
-        let newY = prev.y + prev.dy;
+    // Inicializace rybiček podle `fishes`
+    const initialFishStates = fishes.map((fish) => ({
+      id: fish.id,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      dx: Math.random() * 4 - 2,
+      dy: Math.random() * 4 - 2,
+      isFlipped: false,
+      isLarge: fish.isLarge,
+    }));
 
-        // Odrážení od stěn
-        let newDx = prev.dx;
-        let newDy = prev.dy;
+    setFishStates(initialFishStates);
+  }, [fishes]);
 
-        if (newX <= 0 || newX >= 400) {
-          newDx = -prev.dx;
-        }
-        if (newY <= 0 || newY >= 400) {
-          newDy = -prev.dy;
-        }
+  // Animace rybiček
+  useEffect(() => {
+    const intervals = [];
+    const timeouts = [];
 
-        // Otočení ryby podle směru
-        const isFlipped = newDx < 0;
+    fishStates.forEach((fish, index) => {
+      const moveInterval = setInterval(() => {
+        setFishStates((prev) =>
+          prev.map((f) => {
+            if (f.id !== fish.id) return f;
 
-        return {
-          ...prev,
-          x: Math.max(0, Math.min(newX, 400)),
-          y: Math.max(0, Math.min(newY, 400)),
-          dx: newDx,
-          dy: newDy,
-          isFlipped,
-        };
-      });
-    }, 50);
+            let newX = f.x + f.dx;
+            let newY = f.y + f.dy;
 
-    // ZMĚNA SMĚRU KAŽDÝCH 1-10 SEKUND
-    const directionChange = () => {
-      setFishState((prev) => {
-        const newDx = Math.random() * 4 - 2; // -2 až +2
-        const newDy = Math.random() * 4 - 2;
+            let newDx = f.dx;
+            let newDy = f.dy;
 
-        return {
-          ...prev,
-          dx: newDx,
-          dy: newDy,
-          isFlipped: newDx < 0,
-        };
-      });
+            if (
+              newX <= 0 ||
+              newX >= window.innerWidth - (f.isLarge ? 100 : 60)
+            ) {
+              newDx = -f.dx;
+            }
+            if (
+              newY <= 0 ||
+              newY >= window.innerHeight - (f.isLarge ? 100 : 60)
+            ) {
+              newDy = -f.dy;
+            }
 
-      setTimeout(directionChange, Math.random() * 9000 + 1000);
-    };
-    const directionTimeout = setTimeout(
-      directionChange,
-      Math.random() * 9000 + 1000
-    );
+            const isFlipped = newDx < 0;
+
+            return { ...f, x: newX, y: newY, dx: newDx, dy: newDy, isFlipped };
+          })
+        );
+      }, 50);
+
+      intervals.push(moveInterval);
+
+      const changeDirection = () => {
+        setFishStates((prev) =>
+          prev.map((f) => {
+            if (f.id !== fish.id) return f;
+
+            const newDx = Math.random() * 4 - 2;
+            const newDy = Math.random() * 4 - 2;
+
+            const isFlipped = newDx < 0;
+
+            return { ...f, dx: newDx, dy: newDy, isFlipped };
+          })
+        );
+
+        timeouts[index] = setTimeout(
+          changeDirection,
+          Math.random() * 9000 + 1000
+        );
+      };
+
+      timeouts[index] = setTimeout(
+        changeDirection,
+        Math.random() * 9000 + 1000
+      );
+    });
 
     return () => {
-      clearInterval(moveInterval);
-      clearTimeout(directionTimeout);
+      intervals.forEach(clearInterval);
+      timeouts.forEach(clearTimeout);
     };
-  }, []);
+  }, [fishStates]);
 
   return (
     <div className="container">
-      <div
-        className="fish"
-        style={{
-          left: `${fishState.x}px`,
-          top: `${fishState.y}px`,
-          transform: fishState.isFlipped ? "scaleX(-1)" : "scaleX(1)",
-        }}
-      ></div>
+      {fishStates.map((fish) => (
+        <div
+          key={fish.id}
+          className="fish"
+          style={{
+            left: `${fish.x}px`,
+            top: `${fish.y}px`,
+            transform: fish.isFlipped ? "scaleX(-1)" : "scaleX(1)",
+            width: fish.isLarge ? "100px" : "60px",
+            height: fish.isLarge ? "100px" : "60px",
+          }}
+        ></div>
+      ))}
 
-      <h1 className="display-4 text-center">Akvarium</h1>
+      <h1 className="display-4 text-center">Akvárium</h1>
       <div className="row">
         <div className="col-md-6 col-12 p-5">
           <div className="d-flex justify-content-center mb-3">

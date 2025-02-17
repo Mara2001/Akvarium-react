@@ -17,11 +17,9 @@
 
 .fish {
   position: absolute;
-  width: 100px;
-  height: 100px;
   background: url("https://www.svgrepo.com/show/60393/fish.svg") no-repeat
     center/contain;
-  transition: top 1s linear, left 1s linear;
+  transition: transform 0.3s ease;
   z-index: 1;
 }
 
