@@ -4,7 +4,7 @@ function Fishes(props) {
   const [fish, setFish] = useState({ id: 0, name: "", isLarge: false });
 
   return (
-    <div className="border rounded p-3 bg-light-blue">
+    <div className="border rounded p-3 bg-light-blue component-container">
       <h2 className="text-center display-5">Rybičky</h2>
       <h3 className="display-6">Přidej rybičku</h3>
       <div className="row">

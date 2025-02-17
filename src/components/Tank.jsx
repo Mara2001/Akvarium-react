@@ -7,7 +7,7 @@ function Tank(props) {
   const [volume, setVolume] = useState(0);
 
   return (
-    <div className="border rounded p-3 bg-light-blue">
+    <div className="border rounded p-3 bg-light-blue component-container">
       <h2 className="text-center display-5">Nádrž</h2>
       <h3 className="display-6">Rozměry nádrže</h3>
       <div className="row">

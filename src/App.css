@@ -1,3 +1,35 @@
 .bg-light-blue {
-  background-color: #cceeff; /* Nebo jiný odstín podle vkusu */
+  background-color: #cceeff;
+}
+
+.container {
+  position: relative;
+  background-color: #cceeff;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  z-index: 0;
+}
+.component-container {
+  background-color: aquamarine;
+  z-index: 2;
+}
+
+.fish {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: url("https://www.svgrepo.com/show/60393/fish.svg") no-repeat
+    center/contain;
+  transition: top 1s linear, left 1s linear;
+  z-index: 1;
+}
+
+@keyframes swim {
+  from {
+    left: -50px;
+  }
+  to {
+    left: 100%;
+  }
 }
