@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Fishes from "./components/fishes";
+import Fishes from "./components/Fishes";
 import Tank from "./components/Tank";
 
 function App() {
